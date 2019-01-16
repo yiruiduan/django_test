@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>主机{{ host_info.first.process_in_host.host_name }}详细信息</h1>
+    <table border="1">
+        <thead>
+            <th>进程名</th>
+            <th>mem使用率</th>
+            <th>cpu使用率</th>
+        </thead>
+        <tbody>
+            {% for line in host_info %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ line.process_name }}</td>
+                    <td>{{ line.process_mem }}</td>
+                    <td>{{ line.process_cpu }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>

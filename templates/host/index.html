@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/static/common.css" />
+</head>
+<body style="margin: 0">
+{#    <form action={{ request.path_info }} method="post">#}
+{#        <p><input type="text" name="user" placeholder="用户名"/></p>#}
+{#        <p><input type="text" name="email" placeholder="邮箱"/></p>#}
+{#        <input type="submit" value="提交"/>#}
+{#    </form>#}
+<div class="head_pg">
+    <div>我是一只小小小小鸟</div>
+</div>
+<div class="menu">
+    <h1>主机组列表</h1>
+    {% for row in group_list %}
+    <a href="/app01/group-{{ row.nid }}.html" style="display: block">{{ row.caption }}</a>
+    {% endfor %}
+</div>
+<div class="context">
+    <h1>
+        主机列表
+    </h1>
+    <input type="submit" value="添加主机"/>
+        {% if host_list %}
+        <table border="1">
+            <thead>
+                <th>主机名</th>
+                <th>主机ip</th>
+                <th>主机端口</th>
+                <th>主机用户</th>
+                <th>业务线</th>
+                <th style="text-align: center">动作</th>
+            </thead>
+            <tbody>
+                {% for row in host_list %}
+                <tr host_id="{{ row.nid }}" group_id="{{ row.host_group.nid }}">
+                    <td>{{ row.host_name }}</td>
+                    <td>{{ row.host_ip }}</td>
+                    <td>{{ row.host_port }}</td>
+                    <td>{{ row.host_user }}</td>
+                    <td>{{ row.host_group.caption }}</td>
+                    <td>
+                        <a target="_blank" href="/app01/detail-{{ row.nid }}.html" methods="post">查看详情</a>
+                        <span>|</span>
+                        <a target="_blank" class="edit">编辑主机</a>
+                        <span>|</span>
+                        <a target="_blank" class="delete">删除主机</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+</div>
+<div class="shadow {{ status }}"></div>
+<div class="third {{ status }}">
+    <h1 style="position: relative">
+        添加主机
+        <div class="exit"></div>
+    </h1>
+
+    <div><input type="text" name="host_name" placeholder="主机名"/></div>
+    <div><input type="text" name="host_ip" placeholder="主机ip"/></div>
+    <div><input type="text" name="host_port" placeholder="主机端口"/></div>
+    <div><input type="text" name="host_user" placeholder="主机用户"/></div>
+    <select name="host_in_group">
+        {% for line in group_list %}
+            <option value="{{ line.nid }}">{{ line.caption }}</option>
+        {% endfor %}
+    </select>
+    <a id="ajax_submit" style="display: inline-block;padding: 5px;background-color: #eeeeee;border-radius: 2px">悄悄提交</a>
+    <span id="error" style="color: red"></span>
+{#    <form action="{{ request.path_info }}" method="post">#}
+{#        {% for row1 in host_info %}#}
+{#            <div>id:{{ row1.id }}</div>#}
+{#            <div>用户：<input type="text" name="user" value="{{ row1.user_name }}"/></div>#}
+{#            <div>密码：<input type="text" name="password" value="{{ row1.user_pwd }}"/></div>#}
+{#            <div>手机：<input type="text" name="telphone" value="{{ row1.user_tel }}"/></div>#}
+{#            <div>邮箱：<input type="text" name="email" value="{{ row1.user_email }}"/></div>#}
+{#            <div>性别：<input type="text" name="gender" value="{{ row1.user_gender }}"/></div>#}
+{#            <span>所属组：</span>#}
+{#            <select name="group_id">#}
+{#                {% for line in group_info %}#}
+{#                                    <div>{{ line.uid }}</div>#}
+{#                    {% if row1.user_group_id == line.uid %}#}
+{#                        <option value="{{ line.uid }}" selected="selected">{{ line.capthion }}</option>#}
+{#                    {% else %}#}
+{#                        <option value="{{ line.uid }}">{{ line.capthion }}</option>#}
+{#                    {% endif %}#}
+{#                {% endfor %}#}
+{#            </select>#}
+{#        {% endfor %}#}
+{#        <div><input type="submit" value="确认修改"/></div>#}
+{#    </form>#}
+</div>
+<div class="edit_third {{ status }}">
+        <h1 style="position: relative">
+        编辑主机
+        <div class="exit"></div>
+    </h1>
+    <form id="edit_form">
+        <div><input type="text" name="host_id" style="display: none"/></div>
+        <div><input type="text" name="host_name"/></div>
+        <div><input type="text" name="host_ip"/></div>
+        <div><input type="text" name="host_port"/></div>
+        <div><input type="text" name="host_user"/></div>
+        <select name="host_in_group">
+            {% for line in group_list %}
+                <option value="{{ line.nid }}">{{ line.caption }}</option>
+            {% endfor %}
+        </select>
+        <a id="ajax_submit_edit" style="display: inline-block;padding: 5px;background-color: #eeeeee;border-radius: 2px">确认编辑</a>
+        <span id="edit_error" style="color: red"></span>
+    </form>
+
+</div>
+<script src="/static/jquery-3.3.1.min.js"></script>
+<script>
+    {#关闭模态对话框#}
+    $("h1 .exit").click(function () {
+        $(".shadow,.third,.edit_third").addClass("hide");
+    });
+    {#添加主机界面#}
+    $("[value='添加主机']").click(function () {
+         $(".shadow,.third").removeClass("hide");
+    });
+    {#添加主机提交#}
+    $("#ajax_submit").click(function () {
+        console.log();
+        $.ajax({
+            url:"/app01/test_ajax",
+            type:"POST",
+            data:{"host_name":$("div [name='host_name']").val(),
+            "host_ip":$("div [name='host_ip']").val(),
+            "host_port":$("div [name='host_port']").val(),
+            "host_user":$("div [name='host_user']").val(),
+            "host_in_group":$("select[name='host_in_group']").val()},
+            success:function (data) {
+                var obj=JSON.parse(data);
+                if(obj.status){
+                    location.reload();
+                }else {
+                    $("#error").text(obj.error);
+                };
+            }
+        })
+    });
+    {#编辑主机界面#}
+    $(".edit").click(function () {
+        $(".shadow,.edit_third").removeClass("hide");
+        var host_name=$(this).parent().siblings()[0].innerText;
+        var host_ip=$(this).parent().siblings()[1].innerText;
+        var host_port=$(this).parent().siblings()[2].innerText;
+        var host_user=$(this).parent().siblings()[3].innerText;
+        var group_id=$(this).parent().parent().attr("group_id");
+        var host_id=$(this).parent().parent().attr("host_id");
+        $(".edit_third div [name='host_id']").val(host_id);
+        $(".edit_third div [name='host_name']").val(host_name);
+        $(".edit_third div [name='host_ip']").val(host_ip);
+        $(".edit_third div [name='host_port']").val(host_port);
+        $(".edit_third div [name='host_user']").val(host_user);
+        $(".edit_third select").val(group_id)
+    });
+    {#编辑主机提交#}
+    $("#ajax_submit_edit").click(function () {
+        $.ajax({
+            url: "/app01/test_ajax",
+            type: "POST",
+            data:$("#edit_form").serialize(),
+            success:function (data) {
+                var obj=JSON.parse(data)
+                if(obj.status){
+                    location.reload()
+                }else {
+                    $("#edit_error").text(obj.error);
+                };
+            }
+        })
+    })
+</script>
+
+</body>
+</html>

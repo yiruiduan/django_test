@@ -1,0 +1,81 @@
+
+.hide {
+    display: none;
+}
+
+.head_pg {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 48px;
+    background-color: #2459a2;
+    color: white;
+    line-height: 48px;
+    text-align: center;
+    font-size: 30px;
+}
+
+.menu {
+    position: absolute;
+    padding: 15px;
+    top: 48px;
+    bottom: 0;
+    left: 0px;
+    width: 200px;
+    background-color: brown;
+    color: black;
+
+}
+
+.context {
+    position: absolute;
+    padding: 15px;
+    top: 48px;
+    right: 0px;
+    bottom: 0px;
+    left: 240px;
+    overflow: auto;
+    text-align: left;
+}
+
+.shadow {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: black;
+    opacity: 0.5;
+    z-index: 9;
+}
+
+.third,.edit_third {
+    position: fixed;
+    background-color: white;
+    width: 700px;
+    height: 500px;
+    z-index: 10;
+    left: 50%;
+    top: 50%;
+    border-radius: 10px;
+    margin-top: -250px;
+    margin-left: -350px;
+    text-align: center;
+}
+
+.exit {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: url("/static/image/shutdow.jpg") -8px -66px no-repeat;
+    background-size:150px 150px;
+    position: absolute;
+    right: 5px;
+    top: 0;
+}
+.exit:hover{
+    background: url("/static/image/shutdow.jpg") -8px -22px no-repeat;
+    background-size:150px 150px;
+
+}

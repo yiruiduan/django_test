@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .head_pg {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            height: 48px;
+            background-color: #2459a2;
+            color: white;
+            line-height: 48px;
+            text-align: center;
+            font-size: 30px;
+        }
+
+        .menu {
+            position: absolute;
+            padding: 15px;
+            top: 48px;
+            bottom: 0;
+            left: 0px;
+            width: 200px;
+            background-color: brown;
+
+        }
+
+        .context {
+            position: absolute;
+            padding: 15px;
+            top: 48px;
+            right: 0px;
+            bottom: 0px;
+            left: 240px;
+            overflow: auto;
+            text-align: left;
+        }
+    </style>
+</head>
+<body style="margin: 0">
+{#    <form action={{ request.path_info }} method="post">#}
+{#        <p><input type="text" name="user" placeholder="用户名"/></p>#}
+{#        <p><input type="text" name="email" placeholder="邮箱"/></p>#}
+{#        <input type="submit" value="提交"/>#}
+{#    </form>#}
+<div class="head_pg">
+    <div>我是一只小小小小鸟</div>
+</div>
+<div class="menu">
+    <a href="#" style="display: block">用户管理</a>
+    <a href="#" style="display: block">用户组管理</a>
+</div>
+<div class="context">
+    <h1>编辑界面</h1>
+    <form action="{{ request.path_info }}" method="post">
+        {% for row in user_info %}
+        <div>id:{{ row.id }}</div>
+        <div>用户：<input type="text" name="user" value="{{ row.user_name }}"/></div>
+        <div>密码：<input type="text" name="password" value="{{ row.user_pwd }}"/></div>
+        <div>手机：<input type="text" name="telphone" value="{{ row.user_tel }}"/></div>
+        <div>邮箱：<input type="text" name="email" value="{{ row.user_email }}"/></div>
+        <div>性别：<input type="text" name="gender" value="{{ row.user_gender }}"/></div>
+        <span>所属组：</span>
+        <select name="group_id">
+            {% for line in group_info %}
+{#                <div>{{ line.uid }}</div>#}
+                {% if row.user_group_id == line.uid %}
+                    <option value="{{ line.uid }}" selected="selected">{{ line.capthion }}</option>
+                {% else %}
+                    <option value="{{ line.uid }}">{{ line.capthion }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        {% endfor %}
+        <div><input type="submit" value="确认修改"/></div>
+    </form>
+
+</div>
+
+</body>
+</html>
