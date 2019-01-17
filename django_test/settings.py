@@ -90,6 +90,8 @@ DATABASES = {
     'PASSWORD': 'zyyrd530487',
     'HOST': '192.168.1.197',
     'PORT': '3306',
+    "CHARSET":"UTF8",
+    "COLLATION":"utf8_general_ci"
     }
 }
 

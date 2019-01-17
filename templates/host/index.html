@@ -63,18 +63,25 @@
         添加主机
         <div class="exit"></div>
     </h1>
+    <form id="add_form">
+        <div><input type="text" name="host_name" placeholder="主机名"/></div>
+        <div><input type="text" name="host_ip" placeholder="主机ip"/></div>
+        <div><input type="text" name="host_port" placeholder="主机端口"/></div>
+        <div><input type="text" name="host_user" placeholder="主机用户"/></div>
+        <select name="host_in_group">
+            {% for line in group_list %}
+                <option value="{{ line.nid }}">{{ line.caption }}</option>
+            {% endfor %}
+        </select>
+        <select name="host_in_app" multiple="multiple">
+            {% for app in app_list %}
+                <option value="{{ app.id }}">{{ app.app_name }}</option>
+            {% endfor %}
+        </select>
+        <a id="ajax_submit" style="display: inline-block;padding: 5px;background-color: #eeeeee;border-radius: 2px">悄悄提交</a>
+        <span id="error" style="color: red"></span>
+    </form>
 
-    <div><input type="text" name="host_name" placeholder="主机名"/></div>
-    <div><input type="text" name="host_ip" placeholder="主机ip"/></div>
-    <div><input type="text" name="host_port" placeholder="主机端口"/></div>
-    <div><input type="text" name="host_user" placeholder="主机用户"/></div>
-    <select name="host_in_group">
-        {% for line in group_list %}
-            <option value="{{ line.nid }}">{{ line.caption }}</option>
-        {% endfor %}
-    </select>
-    <a id="ajax_submit" style="display: inline-block;padding: 5px;background-color: #eeeeee;border-radius: 2px">悄悄提交</a>
-    <span id="error" style="color: red"></span>
 {#    <form action="{{ request.path_info }}" method="post">#}
 {#        {% for row1 in host_info %}#}
 {#            <div>id:{{ row1.id }}</div>#}
@@ -135,11 +142,7 @@
         $.ajax({
             url:"/app01/test_ajax",
             type:"POST",
-            data:{"host_name":$("div [name='host_name']").val(),
-            "host_ip":$("div [name='host_ip']").val(),
-            "host_port":$("div [name='host_port']").val(),
-            "host_user":$("div [name='host_user']").val(),
-            "host_in_group":$("select[name='host_in_group']").val()},
+            data:$("#add_form").serialize(),
             success:function (data) {
                 var obj=JSON.parse(data);
                 if(obj.status){
@@ -172,13 +175,17 @@
             url: "/app01/test_ajax",
             type: "POST",
             data:$("#edit_form").serialize(),
-            success:function (data) {
-                var obj=JSON.parse(data)
+            dataType: "JSON",
+            traditional:true,
+            success:function (obj) {
                 if(obj.status){
                     location.reload()
                 }else {
                     $("#edit_error").text(obj.error);
                 };
+            },
+            error:function () {
+
             }
         })
     })

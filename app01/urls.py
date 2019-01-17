@@ -22,6 +22,7 @@ urlpatterns = [
     re_path('group-(?P<nid>\d+).html$', views.Host_list.as_view()),
     re_path('detail-(?P<nid>\w+).html$', views.detail,name="detail"),
     re_path('test_ajax', views.test_ajax),
+    re_path('app', views.app),
     # path('',views.index ),
     # re_path('index_test/(\d+)/(\d+)/',views.index,name="index"),
     path('login/', views.login),
