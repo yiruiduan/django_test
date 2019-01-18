@@ -20,6 +20,8 @@ from cmdb import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('cmdb/',include("cmdb.urls") ),
+    path('new/', include("new.urls",namespace="new")),
+    path('new1/', include("new.urls",namespace="new1")),
     path('app01/', include("app01.urls")),
 
 ]
