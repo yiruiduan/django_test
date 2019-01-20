@@ -1,0 +1,31 @@
+{% extends "new/master.html" %}
+
+{% block common %}
+    <style>
+        .page_sty{
+            display: inline-block;
+            width: 60px;
+            height: 38px;
+            background-color: #cccccc;
+            border-radius: 5px;
+            margin: 5px;
+            text-align: center;
+            line-height: 38px;
+        }
+        .body_pg .page_sty.active{
+            background-color: #2459a2;
+        }
+    </style>
+{% endblock %}
+
+{% block context %}
+    <div style="position: relative;width: 100%;min-height: 100%">
+        <ul>
+        {% for i in li %}
+            <li>{{ i }}</li>
+        {% endfor %}
+        </ul>
+        {{ page_str }}
+    </div>
+{% endblock %}
+

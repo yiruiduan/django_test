@@ -22,5 +22,7 @@ urlpatterns = [
     re_path('tpl1', views.tpl1),
     re_path('tpl2', views.tpl2),
     re_path('tpl3', views.tpl3),
+    re_path('tpl4', views.tpl4),
+    re_path('user_list', views.user_list),
 ]
 

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>后台管理</title>
+    <style>
+        .head_pg{
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            background-color: #209ed8;
+            height: 48px;
+            line-height: 48px;
+        }
+        .menu_pg{
+            position: fixed;
+            top: 48px;
+            bottom: 0;
+            left: 0;
+            background-color: #254652;
+            width: 200px;
+            padding: 10px;
+            color: white;
+
+        }
+        .body_pg{
+            position: fixed;
+            top: 86px;
+            right: 0;
+            bottom: 0;
+            left: 220px;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f5f9fa;
+            overflow: auto;
+        }
+        .title_sty{
+            position: fixed;
+            top: 48px;
+            right: 0;
+            left: 220px;
+            margin: 10px 10px 0 10px;
+            height: 38px;
+            line-height: 38px;
+            background-color: #cccccc;
+            border-radius: 5px 5px 0 0 ;
+        }
+    </style>
+    {% block common %}{% endblock %}
+</head>
+<body>
+    <div class="head_pg">{% block head %}{% endblock %}</div>
+    <div class="menu_pg">{% block menu %}{% endblock %}</div>
+    <div class="title_sty">{% block title %}{% endblock %}</div>
+
+    <div class="body_pg">
+
+            {% block context %}{% endblock %}
+        </div>
+
+    </div>
+</body>
+</html>

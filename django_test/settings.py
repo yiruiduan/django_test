@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cmdb',
     'app01',
+    'new',
 ]
 
 MIDDLEWARE = [
@@ -88,8 +89,8 @@ DATABASES = {
     'NAME':'django_test',
     'USER': 'root',
     'PASSWORD': 'zyyrd530487',
-    'HOST': '192.168.1.197',
-    'PORT': '3306',
+    'HOST': '222.128.104.218',
+    'PORT': '9006',
     "CHARSET":"UTF8",
     "COLLATION":"utf8_general_ci"
     }
