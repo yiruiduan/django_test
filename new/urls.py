@@ -19,6 +19,8 @@ from new import views
 app_name="new"
 urlpatterns = [
     re_path('index',views.index,name= "ddl"),
+    re_path('login',views.login),
+    re_path('index',views.index),
     re_path('tpl1', views.tpl1),
     re_path('tpl2', views.tpl2),
     re_path('tpl3', views.tpl3),

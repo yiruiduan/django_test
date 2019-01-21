@@ -26,6 +26,27 @@
         {% endfor %}
         </ul>
         {{ page_str }}
+        <select name="data_per_page">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+        </select>
     </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(function () {
+            var v =$.cookie("data_per_page")
+            $("[name='data_per_page']").val(v)
+        })
+        $("[name='data_per_page']").change(function () {
+            var v =$(this).val()
+            $.cookie("data_per_page",v,{"max_age":3600})
+            location.reload()
+        })
+    </script>
 {% endblock %}
 

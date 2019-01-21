@@ -1,8 +1,16 @@
 from django.shortcuts import render,redirect,HttpResponse
 from django.urls import reverse
-from django.utils.safestring import mark_safe
-
+from utils import pagination
+from new import models
 # Create your views here.
+def auth(func):
+    def inner(request,*args,**kwargs):
+        v = request.COOKIES.get("username")
+        if not v:
+            return redirect("/new/login.html")
+        return func(request,*args,**kwargs)
+    return inner
+
 def index(request,*args,**kwargs):
     print(request.COOKIES)
     for k,v in request.environ.items():
@@ -28,70 +36,55 @@ def tpl4(request):
 USER_LIST=[]
 for i in range(1009):
     USER_LIST.append(i)
-def user_list(request):
-    per_num=10
-    mark_per_page = 11
 
+@auth
+def user_list(request):
     page_num=request.GET.get("p","1")
     page_num=int(page_num)
-    start_num=(page_num-1)*per_num
-    end_num=page_num*per_num
-    user=USER_LIST[start_num:end_num]
-    user_total=len(USER_LIST)
-    total_count,y=divmod(user_total,per_num)
-    if y:
-        total_count+=1
-    page_str=[]
-    # 上一页
-    if page_num <=1:
-        prev= '<a class="page_sty" href="javascript:void(0)">上一页</a>'
-    else:
-        prev = '<a class="page_sty" href="/new/user_list?p=%s">上一页</a>'%(page_num-1)
-    page_str.append(prev)
-
-    # 显示的页签
-    if total_count <= mark_per_page:
-        start_index = 1
-        end_index = total_count +1
-    else:
-        if page_num <= (mark_per_page+1)/2 :
-            start_index = 1
-            end_index = 11
-        else:
-            if page_num+(mark_per_page+1)/2 > total_count:
-                end_index= total_count+1
-                start_index= total_count -11 +1
-            else:
-                start_index = page_num - (mark_per_page -1)/2
-                end_index = page_num +(mark_per_page +1)/2
-
-    for i in range(int(start_index),int(end_index)):
-        if i == int(page_num):
-            tmep='<a class="page_sty active" href="/new/user_list?p=%s">%s</a>' %(i,i)
-        else:
-            tmep='<a class="page_sty" href="/new/user_list?p=%s">%s</a>' %(i,i)
-        page_str.append(tmep)
-    # 下一页
-    if page_num >= total_count:
-        nex= '<a class="page_sty" href="javascript:void(0)">下一页</a>'
-    else:
-        nex= '<a class="page_sty" href="/new/user_list?p=%s">下一页</a>'%(page_num+1)
-    page_str.append(nex)
-    # 跳转
-    jump ="""
-        <input style="width: 28px;height: 28px;border-radius: 5px" type="text"/><a class="page_sty" onclick="jumpTo(this,'new/user_list?p=');" id="jump_to">跳转到</a>
-        <script>
-            function jumpTo(ths,base) {
-                var max_page = %d;
-                var val=document.getElementById("jump_to").previousSibling.value;
-                if( val > max_page){
-                    val =max_page;
-                };
-                if (val < 1){val =1};
-                location.href = base+ val;
-            }
-        </script>    """ %total_count
-    page_str.append(jump)
-    page_str="".join(page_str)
-    page_str=mark_safe(page_str)
+    data_per_page=request.COOKIES.get("data_per_page",10)
+    data_per_page=int(data_per_page)
+    print(data_per_page)
+    page_obj=pagination.Page(page_num,len(USER_LIST),data_per_page)
+    user=USER_LIST[page_obj.start:page_obj.end]
+    page_str = page_obj.page_str("/new/user_list")
     return render(request,"new/user_list.html",{"li":user,"page_str":page_str})
+
+
+
+############################cookie##################################
+
+
+
+def login(request):
+    if request.method == "GET":
+        return render(request,"new/login.html")
+    if request.method =="POST":
+        u= request.POST.get("user",None)
+        p=request.POST.get("password",None)
+        auto=request.POST.get("login_auto")
+        print(u,p,auto)
+        user_exist=models.NewUserInfo.objects.filter(user_name=u,user_pwd=p).first()
+        if user_exist:
+            res =redirect("/new/index")
+            if auto:
+                print("长时间")
+                res.set_signed_cookie("username",u,max_age=3)
+                res.set_cookie("user_type","dog",httponly=True,max_age=3)
+            else:
+                print("短时间")
+                res.set_signed_cookie("username",u)
+
+            return res
+        else:
+            return render(request,"new/login.html",{"error_msg":"用户名密码错误"})
+
+@auth
+def index(request):
+    #获取当前已经登录的用户
+    v=request.COOKIES.get("username")
+    return render(request,"new/index.html",{"current_user":v})
+
+
+
+
+
